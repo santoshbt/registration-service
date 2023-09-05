@@ -1,0 +1,22 @@
+# Use an official Ruby runtime as a parent image
+FROM ruby:2.7.1-alpine
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Install any additional dependencies you need (e.g., bundler, nodejs, yarn)
+RUN apt-get update && \
+    apt-get install -y nodejs npm yarn && \
+    gem install bundler
+
+# Copy the Gemfile and Gemfile.lock into the container
+COPY Gemfile Gemfile.lock ./
+
+# Install Ruby gems
+RUN bundle install
+
+# Copy the rest of your application's source code into the container
+COPY . .
+
+# Specify the command to run your CI/CD pipeline (e.g., running tests)
+CMD ["bundle", "exec", "rspec"]
