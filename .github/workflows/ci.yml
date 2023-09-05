@@ -1,0 +1,32 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Set Up Ruby
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 2.7.2 # Replace with your Ruby version
+
+    - name: Install Dependencies
+      run: |
+        gem install bundler
+        bundle install
+
+    - name: Database Setup
+      run: |
+        bundle exec rake db:create
+        bundle exec rake db:migrate
+
+    - name: Run Tests
+      run: bundle exec rspec
